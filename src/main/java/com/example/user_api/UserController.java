@@ -1,5 +1,6 @@
 package com.example.user_api;
 
+import com.example.user_api.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,12 +30,15 @@ public class UserController {
     }
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
-        return userRepo.findById(id).orElseThrow();
+
+        return userRepo.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: "+ id));
     }
 
     @PutMapping("/{id}")
     public User updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
-        User user = userRepo.findById(id).orElseThrow();
+        User user = userRepo.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID:"+ id));
         user.setName(updatedUser.getName());
         user.setEmail(updatedUser.getEmail());
         return userRepo.save(user);
