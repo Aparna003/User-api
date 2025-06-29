@@ -2,11 +2,14 @@ package com.example.user_api.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.function.Function;
 
+@Component
 public class JwtUtil {
     private static final String SECRET_KEY ="12345678901234567890123456789012";
     private static final long EXPIRATION_TIME = 1000*60*60;
@@ -47,9 +50,10 @@ public class JwtUtil {
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
-     public Boolean validateToken(String token, String username){
-        final String extractedUsername = extractUsername(token);
-        return (extractedUsername.equals(username) && !isTokenExpired(token));
+    public boolean validateToken(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
+
 
 }
