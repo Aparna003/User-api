@@ -1,13 +1,19 @@
 package com.example.user_api;
 
+
+import com.example.user_api.exception.UserNotFoundException;
+import com.example.user_api.security.JwtRequestFilter;
+import com.example.user_api.security.JwtUtil;
 import com.example.user_api.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -17,6 +23,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(UserController.class)
 public class UserControllerTest {
 
@@ -29,6 +36,11 @@ public class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @MockBean
+    private JwtRequestFilter jwtRequestFilter;
+
+    @MockBean
+    private JwtUtil jwtUtil;
     @Test
     public void testGetAllUsers() throws Exception {
         User user = new User(1L, "Aparna", "aparna@example.com");
@@ -53,11 +65,14 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void testGetUserById_notFound() throws Exception {
-        when(userService.getUserById(99L)).thenThrow(new RuntimeException("User not found"));
+        when(userService.getUserById(99L)).thenThrow(new UserNotFoundException("User not found"));
 
         mockMvc.perform(get("/users/99"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("User not found"));
+
     }
 
     @Test
