@@ -1,0 +1,52 @@
+package com.example.user_api.service;
+
+import com.example.user_api.User;
+import com.example.user_api.UserRepository;
+import com.example.user_api.exception.UserNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+@Service
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepo;
+
+    public UserService(UserRepository userRepo) {
+        this.userRepo = userRepo;
+    }
+
+    public List<User> getAllUsers() {
+        return StreamSupport
+                .stream(userRepo.findAll().spliterator(),false)
+                .collect(Collectors.toList());
+    }
+
+    public User getUser(Long id){
+        return userRepo.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: "+id));
+    }
+
+    public User createUser(User user){
+        return userRepo.save(user);
+    }
+    public User getUserById(Long id) {
+        return userRepo.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
+    }
+
+    public User updateUser(Long id, User updatedUser){
+        User user = getUser(id);
+        user.setName(updatedUser.getName());
+        user.setEmail(updatedUser.getEmail());
+        return userRepo.save(user);
+    }
+
+    public void deleteUser(Long id){
+        userRepo.deleteById(id);
+    }
+}

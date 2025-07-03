@@ -2,51 +2,51 @@ package com.example.user_api;
 
 import com.example.user_api.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
+import com.example.user_api.service.UserService;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
-    private  final UserRepository userRepo;
-    public UserController(UserRepository userRepo){
-        this.userRepo = userRepo;
+    private final UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
-
     @PostMapping
     public User createUser(@RequestBody User user){
-        return userRepo.save(user);
+        return userService.createUser(user);
     }
 
     @GetMapping
     public List<User> getAllUsers() {
-        return StreamSupport
-                .stream(userRepo.findAll().spliterator(), false)
-                .collect(Collectors.toList());
+        return userService.getAllUsers();
     }
     @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id) {
+    public EntityModel<User> getUser(@PathVariable Long id) {
 
-        return userRepo.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found with ID: "+ id));
+        User user = userService.getUserById(id);
+
+        return EntityModel.of(user,
+                linkTo(methodOn(UserController.class).getUser(id)).withSelfRel(),
+                linkTo(methodOn(UserController.class).getAllUsers()).withRel("all-users"));
     }
 
     @PutMapping("/{id}")
     public User updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
-        User user = userRepo.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found with ID:"+ id));
-        user.setName(updatedUser.getName());
-        user.setEmail(updatedUser.getEmail());
-        return userRepo.save(user);
+        return userService.updateUser(id, updatedUser);
     }
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
-        userRepo.deleteById(id);
+        userService.deleteUser(id);
     }
+
     @Value("${app.environment}")
     private String environment;
 
