@@ -1,6 +1,8 @@
-package com.example.user_api;
+package com.example.user_api.test;
 
 
+import com.example.user_api.User;
+import com.example.user_api.UserController;
 import com.example.user_api.exception.UserNotFoundException;
 import com.example.user_api.security.JwtRequestFilter;
 import com.example.user_api.security.JwtUtil;
@@ -17,7 +19,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
