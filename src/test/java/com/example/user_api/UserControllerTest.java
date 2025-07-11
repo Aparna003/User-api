@@ -1,8 +1,6 @@
-package com.example.user_api.test;
+package com.example.user_api;
 
 
-import com.example.user_api.User;
-import com.example.user_api.UserController;
 import com.example.user_api.exception.UserNotFoundException;
 import com.example.user_api.security.JwtRequestFilter;
 import com.example.user_api.security.JwtUtil;

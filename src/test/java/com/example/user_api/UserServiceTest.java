@@ -1,7 +1,5 @@
-package com.example.user_api.test;
+package com.example.user_api;
 
-import com.example.user_api.User;
-import com.example.user_api.UserRepository;
 import com.example.user_api.exception.UserNotFoundException;
 import com.example.user_api.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
