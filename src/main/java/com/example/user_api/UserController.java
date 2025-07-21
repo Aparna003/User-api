@@ -1,6 +1,7 @@
 package com.example.user_api;
 
 import com.example.user_api.exception.UserNotFoundException;
+import com.example.user_api.service.EnvService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +17,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 public class UserController {
 
     private final UserService userService;
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+
     @PostMapping
     public User createUser(@RequestBody User user){
         return userService.createUser(user);
@@ -47,13 +46,18 @@ public class UserController {
         userService.deleteUser(id);
     }
 
-    @Value("${app.environment}")
-    private String environment;
+//    @Value("${app.environment}")
+//    private String environment;
+    private final EnvService envService;
+
+    public UserController(UserService userService, EnvService envService) {
+        this.userService = userService;
+        this.envService = envService;
+    }
 
     @GetMapping("/env")
     public String getEnvironment() {
-        return "Running in " + environment + " profile.";
+        return envService.getEnvironmentMessage();
     }
-
 
 }
