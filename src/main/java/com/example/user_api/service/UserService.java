@@ -21,9 +21,7 @@ public class UserService {
     }
 
     public List<User> getAllUsers() {
-        return StreamSupport
-                .stream(userRepo.findAll().spliterator(),false)
-                .collect(Collectors.toList());
+        return userRepo.findAll();   // JPA method
     }
 
     public User getUser(Long id){
@@ -50,3 +48,81 @@ public class UserService {
         userRepo.deleteById(id);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
