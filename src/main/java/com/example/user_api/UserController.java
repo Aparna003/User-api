@@ -46,6 +46,10 @@ public class UserController {
         userService.deleteUser(id);
     }
 
+    @GetMapping("/email")
+    public User getUserByEmail(@RequestParam String email){
+        return userService.getUserByEmail(email);
+    }
 //    @Value("${app.environment}")
 //    private String environment;
     private final EnvService envService;

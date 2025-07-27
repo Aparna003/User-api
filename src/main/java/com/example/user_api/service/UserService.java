@@ -44,6 +44,12 @@ public class UserService {
         return userRepo.save(user);
     }
 
+    public User getUserByEmail(String email){
+       return userRepo.findByEmail(email)
+               .orElseThrow(() -> new UserNotFoundException("User not found: "+ email));
+
+    }
+
     public void deleteUser(Long id){
         userRepo.deleteById(id);
     }
