@@ -15,12 +15,14 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     //JPQL query
-    @Query("Select u from User u WHERE u.name LIKE %:keyword%")
-    List<User> searchByName(@Param("keyword") String keyword);
+//    @Query("Select u from User u WHERE u.name LIKE %:keyword%")
+//    List<User> searchByName(@Param("keyword") String keyword);
 
     @Query(value = "SELECT u FROM User u WHERE u.email = :email")
     Optional<User> findByEmail(@Param("email") String email);
 
+    @Query("SELECT u FROM User u WHERE LOWER(u.name) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<User> searchByNameIgnoreCase(@Param("keyword") String keyword);
     //Update email
     @Modifying
     @Transactional

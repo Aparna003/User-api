@@ -49,6 +49,10 @@ public class UserService {
                .orElseThrow(() -> new UserNotFoundException("User not found: "+ email));
 
     }
+    public List<User> searchUserByName(String keyword)
+    {
+           return userRepo.searchByNameIgnoreCase(keyword) ;
+    }
 
     public void deleteUser(Long id){
         userRepo.deleteById(id);

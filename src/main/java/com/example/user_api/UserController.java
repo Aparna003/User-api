@@ -50,6 +50,11 @@ public class UserController {
     public User getUserByEmail(@RequestParam String email){
         return userService.getUserByEmail(email);
     }
+
+    @GetMapping("/search")
+    public List<User> searchUsers(@RequestParam String name){
+        return userService.searchUserByName(name);
+    }
 //    @Value("${app.environment}")
 //    private String environment;
     private final EnvService envService;
