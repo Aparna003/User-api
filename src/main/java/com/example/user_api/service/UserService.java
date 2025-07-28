@@ -54,6 +54,12 @@ public class UserService {
            return userRepo.searchByNameIgnoreCase(keyword) ;
     }
 
+    public void updateUserEmail(Long id, String newEmail){
+        int updated = userRepo.updateEmail(id, newEmail);
+        if (updated == 0){
+            throw new UserNotFoundException("No user found with ID:"+ id);
+        }
+    }
     public void deleteUser(Long id){
         userRepo.deleteById(id);
     }

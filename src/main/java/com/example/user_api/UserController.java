@@ -55,6 +55,11 @@ public class UserController {
     public List<User> searchUsers(@RequestParam String name){
         return userService.searchUserByName(name);
     }
+
+    @PatchMapping("/{id}/email")
+    public void updateUserEmail(@PathVariable Long id, @RequestParam String email){
+        userService.updateUserEmail(id,email);
+    }
 //    @Value("${app.environment}")
 //    private String environment;
     private final EnvService envService;
