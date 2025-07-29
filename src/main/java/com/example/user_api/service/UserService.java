@@ -41,6 +41,7 @@ public class UserService {
         User user = getUser(id);
         user.setName(updatedUser.getName());
         user.setEmail(updatedUser.getEmail());
+        user.setPhoneNumber(updatedUser.getPhoneNumber());
         return userRepo.save(user);
     }
 

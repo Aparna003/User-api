@@ -13,6 +13,9 @@ public class User {
     private String name;
     private String email;
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
     public User(String name, String email) {
         this.name = name;
         this.email = email;
@@ -41,4 +44,6 @@ public class User {
         this.email = email;
     }
 
+    public String getPhoneNumber(){ return phoneNumber;};
+    public void setPhoneNumber(String phoneNumber){ this.phoneNumber = phoneNumber;}
 }
