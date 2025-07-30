@@ -4,6 +4,8 @@ import com.example.user_api.User;
 import com.example.user_api.UserRepository;
 import com.example.user_api.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +34,7 @@ public class UserService {
     public User createUser(User user){
         return userRepo.save(user);
     }
+
     public User getUserById(Long id) {
         return userRepo.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
@@ -61,6 +64,23 @@ public class UserService {
             throw new UserNotFoundException("No user found with ID:"+ id);
         }
     }
+
+    public Page<User> getUsersPaginated(Pageable pageable){
+        return userRepo.findAll(pageable);
+    }
+    public User getUserByPhone(String phone){
+        return userRepo.findByPhoneNumber(phone)
+                .orElseThrow(() -> new UserNotFoundException("User not found with phone number:"+ phone));
+    }
+
+    public List<User> findByNameStartingWith(String prefix){
+        return userRepo.findByNameStartingWith(prefix);
+    }
+
+    public List<User> findByEmailContaining(String domain){
+        return userRepo.findByEmailContaining(domain);
+    }
+
     public void deleteUser(Long id){
         userRepo.deleteById(id);
     }

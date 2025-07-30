@@ -3,6 +3,9 @@ package com.example.user_api;
 import com.example.user_api.exception.UserNotFoundException;
 import com.example.user_api.service.EnvService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
 import com.example.user_api.service.UserService;
@@ -27,6 +30,7 @@ public class UserController {
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
+
     @GetMapping("/{id}")
     public EntityModel<User> getUser(@PathVariable Long id) {
 
@@ -56,9 +60,38 @@ public class UserController {
         return userService.searchUserByName(name);
     }
 
+
     @PatchMapping("/{id}/email")
     public void updateUserEmail(@PathVariable Long id, @RequestParam String email){
         userService.updateUserEmail(id,email);
+    }
+    @GetMapping("/paginated")
+    public Page<User> getUsersPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction) {
+
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        return userService.getUsersPaginated(PageRequest.of(page, size, sort));
+    }
+
+    @GetMapping("/phone")
+    public User getUserByPhone(@RequestParam String phone){
+        return userService.getUserByPhone(phone);
+    }
+
+    @GetMapping("/search/prefix")
+    public List<User> searchByNamePrefix(@RequestParam String prefix){
+        return userService.findByNameStartingWith(prefix);
+    }
+
+    @GetMapping("/search/domain")
+    public List<User> searchByEmailDomain(@RequestParam String domain) {
+        return userService.findByEmailContaining(domain);
     }
 //    @Value("${app.environment}")
 //    private String environment;
